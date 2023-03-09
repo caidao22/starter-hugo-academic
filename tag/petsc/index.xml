@@ -1,0 +1,64 @@
+<?xml version="1.0" encoding="utf-8" standalone="yes"?><rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom"><channel><title>PETSc | Hong Zhang</title><link>https://caidao22.github.io/tag/petsc/</link><atom:link href="https://caidao22.github.io/tag/petsc/index.xml" rel="self" type="application/rss+xml"/><description>PETSc</description><generator>Wowchemy (https://wowchemy.com)</generator><language>en-us</language><lastBuildDate>Fri, 27 Aug 2021 00:00:00 +0000</lastBuildDate><image><url>https://caidao22.github.io/media/icon_hu0b7a4cb9992c9ac0e91bd28ffd38dd00_9727_512x512_fill_lanczos_center_3.png</url><title>PETSc</title><link>https://caidao22.github.io/tag/petsc/</link></image><item><title>Installing PETSc and Torchdiffeq on Theta</title><link>https://caidao22.github.io/post/getting-started/</link><pubDate>Fri, 27 Aug 2021 00:00:00 +0000</pubDate><guid>https://caidao22.github.io/post/getting-started/</guid><description>&lt;h2 id="-table-of-contents">📚 Table of Contents&lt;/h2>
+&lt;ol>
+&lt;li>&lt;a href="#prerequisite">👉Prerequistie&lt;/a>&lt;/li>
+&lt;li>&lt;a href="#install-petsc">🦄Install PETSc&lt;/a>&lt;/li>
+&lt;li>&lt;a href="#install-torchdiffeq">✨Install torchdiffeq&lt;/a>&lt;/li>
+&lt;/ol>
+&lt;h2 id="-prerequisite-on-thetagpu-a-nameprerequisitea">👉 Prerequisite on ThetaGPU &lt;a name="prerequisite">&lt;/a>&lt;/h2>
+&lt;ol>
+&lt;li>Request an interactive node&lt;/li>
+&lt;/ol>
+&lt;p>Once you login to Theta, do the following&lt;/p>
+&lt;div class="highlight">&lt;pre tabindex="0" class="chroma">&lt;code class="language-fallback" data-lang="fallback">&lt;span class="line">&lt;span class="cl">ssh thetagpusn1
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">qsub -n 1 -t &amp;lt;NODE_TIME_IN_MINUTES&amp;gt; -A &amp;lt;ALLOCATION_NAME&amp;gt; -I
+&lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/div>&lt;ol start="2">
+&lt;li>Enable python environment:&lt;/li>
+&lt;/ol>
+&lt;div class="highlight">&lt;pre tabindex="0" class="chroma">&lt;code class="language-fallback" data-lang="fallback">&lt;span class="line">&lt;span class="cl">source /lus/theta-fs0/software/thetagpu/conda/2021-06-28/mconda3/setup.sh
+&lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/div>&lt;p>Python is not avaible on thetagpusn nodes and GPU nodes. This will setup a conda environment with a recent &amp;ldquo;from scratch&amp;rdquo; build of the PyTorch repository on the master branch. The location is subject to change.&lt;/p>
+&lt;ol start="3">
+&lt;li>Set up internet connection:&lt;/li>
+&lt;/ol>
+&lt;div class="highlight">&lt;pre tabindex="0" class="chroma">&lt;code class="language-fallback" data-lang="fallback">&lt;span class="line">&lt;span class="cl">export http_proxy=http://proxy.tmi.alcf.anl.gov:3128
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">export https_proxy=http://proxy.tmi.alcf.anl.gov:3128
+&lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/div>&lt;p>Alternatively, you can add &lt;code>--attrs=pubnet&lt;/code> when requesting nodes with &lt;code>qsub &lt;/code>.&lt;/p>
+&lt;p>Now you can install python packages with &lt;code>pip install&lt;/code>, e.g.&lt;/p>
+&lt;div class="highlight">&lt;pre tabindex="0" class="chroma">&lt;code class="language-fallback" data-lang="fallback">&lt;span class="line">&lt;span class="cl">pip install Cython matplotlib scipy
+&lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/div>&lt;p>💬More info can be found &lt;a href="https://www.alcf.anl.gov/support-center/theta-gpu-nodes/running-pytorch-conda" target="_blank" rel="noopener">here&lt;/a>&lt;/p>
+&lt;ol start="4">
+&lt;li>Lunch jobs on Theta：&lt;/li>
+&lt;/ol>
+&lt;div class="highlight">&lt;pre tabindex="0" class="chroma">&lt;code class="language-fallback" data-lang="fallback">&lt;span class="line">&lt;span class="cl">aprun -n 64 -N 64 ./&amp;lt;your_program&amp;gt; &amp;lt;program_arguments&amp;gt;
+&lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/div>&lt;p>You need to use &lt;code>aprun&lt;/code> to execute your program on Theta.&lt;/p>
+&lt;ul>
+&lt;li>&lt;code>-n&lt;/code> specifies the total number of MPI ranks&lt;/li>
+&lt;li>&lt;code>-N&lt;/code> specifies the ranks per node&lt;/li>
+&lt;li>Add &lt;code>-q&lt;/code> if you want to silence the output such as &lt;code>Application 22305720 resources: utime ~10s, stime ~3s, Rss ~18776, inblocks ~0, outblocks ~8&lt;/code>&lt;/li>
+&lt;/ul>
+&lt;h2 id="-installation-of-petsc-a-nameinstall-petsca">🦄 Installation of PETSc &lt;a name="install-petsc">&lt;/a>&lt;/h2>
+&lt;ul>
+&lt;li>&lt;strong>GPU build&lt;/strong>&lt;/li>
+&lt;/ul>
+&lt;div class="highlight">&lt;pre tabindex="0" class="chroma">&lt;code class="language-fallback" data-lang="fallback">&lt;span class="line">&lt;span class="cl">git clone https://gitlab.com/petsc/petsc.git
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">cd petsc
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">./configure --download-revolve --with-shared-libraries COPTFLAGS=-O3 CXXOPTFLAGS=-O3 FOPTFLAGS=-O3 PETSC_ARCH=arch-theta-gpu-opt --with-cuda-gencodearch=80 --with-cuda=1 --with-cudac=nvcc --with-petsc4py --download-fblaslapack
+&lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/div>&lt;p>Follow the printed instructions at the end of configure to do a &lt;code>make&lt;/code>. If you enabled &lt;code>petsc4py&lt;/code> (&lt;code>--with-petsc4py&lt;/code>), add &lt;code>&amp;lt;path_to_petsc&amp;gt;/petsc/arch-theta-cuda-opt/lib&lt;/code> to PYTHONPATH.
+For example, the following can be run directly or added into your .bash_profile script.&lt;/p>
+&lt;div class="highlight">&lt;pre tabindex="0" class="chroma">&lt;code class="language-fallback" data-lang="fallback">&lt;span class="line">&lt;span class="cl">export PYTHONPATH=&amp;lt;path_to_petsc&amp;gt;/petsc/arch-theta-cuda-opt/lib:PYTHONPATH
+&lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/div>&lt;ul>
+&lt;li>&lt;strong>KNL build&lt;/strong>&lt;/li>
+&lt;/ul>
+&lt;div class="highlight">&lt;pre tabindex="0" class="chroma">&lt;code class="language-fallback" data-lang="fallback">&lt;span class="line">&lt;span class="cl">git clone https://gitlab.com/petsc/petsc.git
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">cd petsc
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">./configure --LIBS=-lstdc++ --known-64-bit-blas-indices=0 --known-bits-per-byte=8 --known-has-attribute-aligned=1 --known-level1-dcache-assoc=8 --known-level1-dcache-linesize=64 --known-level1-dcache-size=32768 --known-memcmp-ok=1 --known-mklspblas-supports-zero-based=0 --known-mpi-c-double-complex=1 --known-mpi-int64_t=1 --known-mpi-long-double=1 --known-mpi-shared-libraries=1 --known-sdot-returns-double=0 --known-sizeof-MPI_Comm=4 --known-sizeof-MPI_Fint=4 --known-sizeof-char=1 --known-sizeof-double=8 --known-sizeof-float=4 --known-sizeof-int=4 --known-sizeof-long-long=8 --known-sizeof-long=8 --known-sizeof-short=2 --known-sizeof-size_t=8 --known-sizeof-void-p=8 --known-snrm2-returns-double=0 --with-cc=cc --with-clib-autodetect=0 --with-cxx=CC --with-cxxlib-autodetect=0 --with-batch --with-debugging=0 --with-fc=0 --with-hdf5=0 --with-make-np --with-memalign=64 --with-shared-libraries COPTFLAGS=-O3 CXXOPTFLAGS=-O3 FOPTFLAGS=-O3 PETSC_ARCH=arch-theta-knl-opt
+&lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/div>&lt;p>💡&lt;strong>Tips&lt;/strong>&lt;/p>
+&lt;ul>
+&lt;li>Do not change any option before &lt;code>--with-batch&lt;/code>&lt;/li>
+&lt;li>For debug version, use &lt;code>--with-debugging&lt;/code> and remove the OPTFLAGS&lt;/li>
+&lt;li>&lt;code>PETSC_ARCH&lt;/code> is just a folder name of your choice, used to discriminate different builds&lt;/li>
+&lt;/ul>
+&lt;h2 id="-installation-of-torchdiffeq-a-nameinstall-torchdiffeqa">✨ Installation of torchdiffeq &lt;a name="install-torchdiffeq">&lt;/a>&lt;/h2>
+&lt;div class="highlight">&lt;pre tabindex="0" class="chroma">&lt;code class="language-fallback" data-lang="fallback">&lt;span class="line">&lt;span class="cl">git clone https://github.com/rtqichen/torchdiffeq.git
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">cd torchdiffeq
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">pip install --user -e .
+&lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/div></description></item><item><title>SIMD optimization of PETSc sparse matrix-vector multiplication over many-core CPUs</title><link>https://caidao22.github.io/talk/petsc-meeting-2019/</link><pubDate>Thu, 06 Jun 2019 00:00:00 +0000</pubDate><guid>https://caidao22.github.io/talk/petsc-meeting-2019/</guid><description/></item></channel></rss>
