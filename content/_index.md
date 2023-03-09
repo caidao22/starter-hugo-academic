@@ -233,7 +233,7 @@ sections:
       title: Recent & Upcoming Talks
       filters:
         folders:
-          - talk
+          - event
     design:
       columns: '2'
       view: compact

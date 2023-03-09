@@ -1,14 +1,14 @@
 ---
-# Documentation: https://sourcethemes.com/academic/docs/managing-content/
+# Documentation: https://wowchemy.com/docs/managing-content/
 
-title: "Optimization of SpMV on GPU for Iterative Solvers in PETSc"
-event: SIAM Conference on Parallel Processing(PP2020)
-event_url: https://www.siam.org/conferences/cm/conference/pp20
-location: Seattle, Washington
+title: "Revolve-Based Adjoint Checkpointing for Multistage Time Integration"
+event: InternationalConferenceonCompu- tational Science (ICCS2021)
+event_url:
+location: Online
 address:
   street:
-  city:
-  region:
+  city: Krakow
+  region: Poland
   postcode:
   country:
 summary:
@@ -16,17 +16,17 @@ abstract:
 
 # Talk start and end times.
 #   End time can optionally be hidden by prefixing the line with `#`.
-date: 2020-02-13
-#date_end: 2019-12-17T13:35:58-06:00
+date: 2021-06-17
+#date_end: 2023-03-09T10:45:32-06:00
 all_day: true
 
-# Schedule page publish date (NOT talk date).
-publishDate: 2019-12-17T13:35:58-06:00
+# Schedule page publish date (NOT event date).
+publishDate: 2023-03-09T10:45:32-06:00
 
 authors: []
-tags: [time integration, coupled]
+tags: []
 
-# Is this a featured talk? (true/false)
+# Is this a featured event? (true/false)
 featured: false
 
 # Featured image
@@ -45,7 +45,7 @@ image:
 #   icon_pack: fab
 #   icon: twitter
 
-# Optional filename of your slides within your talk's folder or a URL.
+# Optional filename of your slides within your event's folder or a URL.
 url_slides:
 
 url_code:
@@ -53,7 +53,7 @@ url_pdf:
 url_video:
 
 # Markdown Slides (optional).
-#   Associate this talk with Markdown slides.
+#   Associate this event with Markdown slides.
 #   Simply enter your slide deck's filename without extension.
 #   E.g. `slides = "example-slides"` references `content/slides/example-slides.md`.
 #   Otherwise, set `slides = ""`.
